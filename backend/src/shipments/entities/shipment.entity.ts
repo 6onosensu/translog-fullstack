@@ -1,7 +1,8 @@
 
 import { ShipmentStatus } from "../enums/shipment-status.enum";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity } from "../../common/base.entity";
+import { ShipmentEvent } from "./shipment-event.entity";
 
 @Entity('shipments')
 export class Shipment extends BaseEntity {
@@ -35,4 +36,7 @@ export class Shipment extends BaseEntity {
 
   @Column({ nullable: true })
   recipientPhone?: string;
+
+  @OneToMany(() => ShipmentEvent, event => event.shipment)
+  events!: ShipmentEvent[];
 }

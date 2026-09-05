@@ -5,7 +5,6 @@ import { AppController } from './app.controller';
 import { AppService} from './app.service';
 import { UsersModule } from './users/users.module';
 import { ShipmentsModule } from './shipments/shipments.module';
-import { ShipmentEventModule } from './shipment-event/shipment-event.module';
 
 
 @Module({
@@ -28,7 +27,6 @@ import { ShipmentEventModule } from './shipment-event/shipment-event.module';
     }),
     UsersModule,
     ShipmentsModule,
-    ShipmentEventModule,
   ],
   controllers: [AppController],
   providers: [AppService],
