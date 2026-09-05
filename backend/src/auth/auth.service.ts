@@ -1,7 +1,11 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { 
+  ConflictException, 
+  Injectable, 
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UserRole } from '../users/enums/user-role.enum';
+import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -13,50 +17,53 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
   
-  async register(
-    registerDto: RegisterDto
-  ): Promise<{ id: string, email: string; role: UserRole }> {
-    const existingUser = await this.usersService.findByEmail(registerDto.email);
+  async register(dto: RegisterDto): Promise<void> {
+    const user = await this.getUser(dto.email);
 
-    if(existingUser) {
+    if (user) {
       throw new ConflictException('User with this email already exists');
     }
 
-    const passwordHash = await bcrypt.hash(registerDto.password, 10);
+    const passwordHash = await bcrypt.hash(dto.password, 10);
 
-    return this.usersService.create(
-      registerDto.email,
+    await this.usersService.create(
+      dto.email,
       passwordHash,
-      registerDto.role,
-      registerDto.name,
+      dto.role,
+      dto.name,
     );
   }
 
-  async login(loginDto: LoginDto): Promise<{ accessToken: string}> {
-    const user = await this.usersService.findByEmail(loginDto.email);
+  async login(dto: LoginDto): Promise<{ accessToken: string}> {
+    const user = await this.validateCredentials(dto);
+    const accessToken = await this.generateToken(user);
 
-    if (!user) {
+    return { accessToken };
+  }
+
+
+  private getUser(email: string): Promise<User | null> {
+    return this.usersService.findByEmail(email);
+  }
+
+  private async validateCredentials(loginDto: LoginDto): Promise<User> {
+    const user = await this.getUser(loginDto.email);
+
+    if (
+      !user ||
+      !(await bcrypt.compare(loginDto.password, user.passwordHash))
+    ) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      loginDto.password,
-      user.passwordHash,
-    );
+    return user;
+  }
 
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid email or password')
-    }
-
-    const accessToken = await this.jwtService.signAsync({
+  private generateToken(user: User): Promise<string> {
+    return this.jwtService.signAsync({
       sub: user.id,
       email: user.email,
       role: user.role,
-    })
-
-    return {
-      accessToken,
-    };
+    });
   }
-  
 }

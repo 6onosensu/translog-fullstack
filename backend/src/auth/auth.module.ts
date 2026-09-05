@@ -7,7 +7,6 @@ import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    UsersModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -16,7 +15,8 @@ import { ConfigService } from '@nestjs/config';
           expiresIn: '3h',
         }
       })
-    })
+    }),
+    UsersModule,
   ],
   providers: [AuthService],
   controllers: [AuthController]
