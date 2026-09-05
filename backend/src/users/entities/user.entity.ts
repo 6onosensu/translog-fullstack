@@ -15,4 +15,7 @@ export class User extends BaseEntity {
     enum: UserRole,
   })
   role!: UserRole;
+
+  @Column()
+  name!: string;
 }
