@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Get, Query, Param } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ShipmentsService } from './shipments.service';
 import { CreateShipmentDto } from './dto/create-shipment.dto';
@@ -11,6 +11,11 @@ export class ShipmentsController {
   constructor(
     private readonly shipmentsService: ShipmentsService,
   ) {}
+
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<Shipment> {
+    return this.shipmentsService.findOne(id);
+  }
 
   @Get()
   findAll(

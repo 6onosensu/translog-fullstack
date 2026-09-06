@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Shipment } from './entities/shipment.entity';
@@ -11,6 +11,19 @@ export class ShipmentsService {
     @InjectRepository(Shipment)
     private readonly shipmentRepo: Repository<Shipment>,
   ) {}
+
+  async findOne(id: string): Promise<Shipment> {
+    const shipment = await this.shipmentRepo.findOne({
+      where: { id },
+      relations: { events: true },
+    });
+
+    if(!shipment) {
+      throw new NotFoundException('Shipment not found');
+    }
+
+    return shipment;
+  }
 
   async findAll(query: GetShipmentsDto): Promise<{
     items: Shipment[];
