@@ -1,12 +1,13 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ShipmentStatus } from "../enums/shipment-status.enum";
+import { Shipment } from "../entities/shipment.entity";
 
 @Injectable()
 export class ShipmentStatusService {
-  canChange(
+  validateChange(
     currentStatus: ShipmentStatus,
     newStatus: ShipmentStatus,
-  ): boolean {
+  ): void {
     const transitions: Record<ShipmentStatus, ShipmentStatus[]> = {
       [ShipmentStatus.CREATED]: [ShipmentStatus.IN_WAREHOUSE],
       [ShipmentStatus.IN_WAREHOUSE]: [ShipmentStatus.IN_TRANSIT],
@@ -20,6 +21,34 @@ export class ShipmentStatusService {
       [ShipmentStatus.CANCELLED]: [],
     };
 
-    return transitions[currentStatus].includes(newStatus);
+    if (!transitions[currentStatus].includes(newStatus)) {
+      throw new BadRequestException('Invalid status transition');
+    }
+
+  }
+
+  validateCancellation(status: ShipmentStatus): void {
+    if (status === ShipmentStatus.DELIVERED) {
+      throw new BadRequestException(
+        'Delivered shipment cannot be cancelled',
+      );
+    }
+
+    if (status === ShipmentStatus.CANCELLED) {
+      throw new BadRequestException(
+        'Shipment is already cancelled',
+      );
+    }
+  }
+
+  apply(
+    shipment: Shipment,
+    status: ShipmentStatus,
+  ): void {
+    shipment.status = status;
+
+    if (status === ShipmentStatus.DELIVERED) {
+      shipment.deliveredAt = new Date();
+    }
   }
 }

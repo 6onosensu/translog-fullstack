@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Shipment } from './entities/shipment.entity';
@@ -11,6 +11,7 @@ import { TrackingCodeService } from './services/tracking-code.service';
 import { ShipmentStatusService } from './services/shipment-status.service';
 import { ShipmentEventsService } from './services/shipment-events.service';
 import { User } from '../users/entities/user.entity';
+import { CancelShipmentDto } from './dto/cancel-shipment.dto';
 
 @Injectable()
 export class ShipmentsService {
@@ -45,7 +46,6 @@ export class ShipmentsService {
   }> {
     const {page, limit, status } = query;
     const where = status ? { status } : {};
-
     const [items, total] = await this.shipmentRepo.findAndCount({
       where,
       skip: (page - 1) * limit,
@@ -77,14 +77,19 @@ export class ShipmentsService {
   ): Promise<Shipment> {
     const shipment = await this.findOne(id);
 
-    this.validateStatusChange(shipment.status, dto.status);
+    this.shipmentStatusService.validateChange(
+      shipment.status,
+      dto.status,
+    );
 
-    const user = await this.getUserById(userId);
+    const user = await this.usersService.findById(userId);
     
-    this.applyStatus(shipment, dto.status);
+    this.shipmentStatusService.apply(
+      shipment,
+      dto.status,
+    );
 
-    await this.shipmentRepo.save(shipment);
-    await this.shipmentEventsService.create(
+    await this.saveShipmentAndEvent(
       shipment,
       user,
       dto.status,
@@ -95,33 +100,47 @@ export class ShipmentsService {
     return this.findOne(id);
   }
 
-  private validateStatusChange(
-    currentStatus: ShipmentStatus,
-    newStatus: ShipmentStatus,
-  ): void {
-    if (!this.shipmentStatusService.canChange(currentStatus, newStatus)) {
-      throw new BadRequestException('Invalid status transition');
-    }
-  }
+  async cancel(
+    id: string,
+    dto: CancelShipmentDto,
+    userId: string,
+  ): Promise<void> {
+    const shipment = await this.findOne(id);
 
-  private async getUserById(userId: string): Promise<User> {
+    this.shipmentStatusService.validateCancellation(
+      shipment.status,
+    );
+
     const user = await this.usersService.findById(userId);
 
-    if (!user) {
-      throw new UnauthorizedException();
-    }
+    this.shipmentStatusService.apply(
+      shipment,
+      ShipmentStatus.CANCELLED,
+    );
 
-    return user;
+    await this.saveShipmentAndEvent(
+      shipment,
+      user,
+      ShipmentStatus.CANCELLED,
+      dto.location,
+      dto.notes,
+    );
   }
 
-  private applyStatus(
-    shipment: Shipment,
-    status: ShipmentStatus,
-  ): void {
-    shipment.status = status;
-
-    if (status === ShipmentStatus.DELIVERED) {
-      shipment.deliveredAt = new Date();
-    }
+  private async saveShipmentAndEvent(
+      shipment: Shipment,
+      user: User,
+      status: ShipmentStatus,
+      location: string,
+      notes?: string,
+    ): Promise<void> {
+      await this.shipmentRepo.save(shipment);
+      await this.shipmentEventsService.create(
+        shipment,
+        user,
+        status,
+        location,
+        notes,
+      );
   }
 }
