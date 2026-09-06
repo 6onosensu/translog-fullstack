@@ -4,10 +4,13 @@ import { Repository } from 'typeorm';
 import { Shipment } from './entities/shipment.entity';
 import { CreateShipmentDto } from './dto/create-shipment.dto';
 import { GetShipmentsDto } from './dto/get-shipments.dto';
-import { ShipmentEvent } from './entities/shipment-event.entity';
 import { UsersService } from '../users/users.service';
 import { ShipmentStatus } from './enums/shipment-status.enum';
 import { UpdateShipmentStatusDto } from './dto/update-shipment-status.dto';
+import { TrackingCodeService } from './services/tracking-code.service';
+import { ShipmentStatusService } from './services/shipment-status.service';
+import { ShipmentEventsService } from './services/shipment-events.service';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class ShipmentsService {
@@ -15,10 +18,10 @@ export class ShipmentsService {
     @InjectRepository(Shipment)
     private readonly shipmentRepo: Repository<Shipment>,
 
-    @InjectRepository(ShipmentEvent)
-    private readonly shipmentEventRepo: Repository<ShipmentEvent>,
-
     private readonly usersService: UsersService,
+    private readonly trackingCodeService: TrackingCodeService,
+    private readonly shipmentStatusService: ShipmentStatusService,
+    private readonly shipmentEventsService: ShipmentEventsService,
   ) {}
 
   async findOne(id: string): Promise<Shipment> {
@@ -57,7 +60,7 @@ export class ShipmentsService {
   }
 
   async create(dto: CreateShipmentDto): Promise<Shipment> {
-    const trackingCode = await this.generateTrackingCode();
+    const trackingCode = await this.trackingCodeService.generate();
 
     const shipment = this.shipmentRepo.create({
       ...dto,
@@ -73,78 +76,52 @@ export class ShipmentsService {
     userId: string,
   ): Promise<Shipment> {
     const shipment = await this.findOne(id);
-    if(!this.canChangeStatus(shipment.status, dto.status)) {
-      throw new BadRequestException('Invalid status translation')
-    }
 
+    this.validateStatusChange(shipment.status, dto.status);
+
+    const user = await this.getUserById(userId);
+    
+    this.applyStatus(shipment, dto.status);
+
+    await this.shipmentRepo.save(shipment);
+    await this.shipmentEventsService.create(
+      shipment,
+      user,
+      dto.status,
+      dto.location,
+      dto.notes,
+    );
+
+    return this.findOne(id);
+  }
+
+  private validateStatusChange(
+    currentStatus: ShipmentStatus,
+    newStatus: ShipmentStatus,
+  ): void {
+    if (!this.shipmentStatusService.canChange(currentStatus, newStatus)) {
+      throw new BadRequestException('Invalid status transition');
+    }
+  }
+
+  private async getUserById(userId: string): Promise<User> {
     const user = await this.usersService.findById(userId);
+
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    shipment.status = dto.status;
+    return user;
+  }
 
-    if (dto.status === ShipmentStatus.DELIVERED) {
+  private applyStatus(
+    shipment: Shipment,
+    status: ShipmentStatus,
+  ): void {
+    shipment.status = status;
+
+    if (status === ShipmentStatus.DELIVERED) {
       shipment.deliveredAt = new Date();
     }
-
-    await this.shipmentRepo.save(shipment);
-
-    const event = this.shipmentEventRepo.create({
-      shipment,
-      user,
-      status: dto.status,
-      location: dto.location,
-      notes: dto.notes,
-    });
-
-    await this.shipmentEventRepo.save(event);
-    return this.findOne(id);
   }
-
-  private async generateTrackingCode(): Promise<string> {
-    let trackingCode: string;
-    let exists: boolean;
-
-    do {
-      const date = new Date()
-        .toISOString()
-        .slice(0, 10)
-        .replaceAll('-', '');
-
-      const suffix = Math.random()
-        .toString(36)
-        .substring(2, 6)
-        .toUpperCase();
-      
-      trackingCode = `ENV-${date}-${suffix}`;
-
-      exists = await this.shipmentRepo.exists({
-        where: { trackingCode },
-      });
-    } while (exists);
-
-    return trackingCode;
-  }
-
-  private canChangeStatus(
-    currentStatus: ShipmentStatus,
-    newStatus: ShipmentStatus,
-  ): boolean {
-    const transitions: Record<ShipmentStatus, ShipmentStatus[]> = {
-      [ShipmentStatus.CREATED]: [ShipmentStatus.IN_WAREHOUSE],
-      [ShipmentStatus.IN_WAREHOUSE]: [ShipmentStatus.IN_TRANSIT],
-      [ShipmentStatus.IN_TRANSIT]: [ShipmentStatus.OUT_FOR_DELIVERY],
-      [ShipmentStatus.OUT_FOR_DELIVERY]: [
-        ShipmentStatus.DELIVERED,
-        ShipmentStatus.RETURNED,
-      ],
-      [ShipmentStatus.DELIVERED]: [],
-      [ShipmentStatus.RETURNED]: [],
-      [ShipmentStatus.CANCELLED]: [],
-
-    };
-
-    return transitions[currentStatus].includes(newStatus);
-  };
 }
