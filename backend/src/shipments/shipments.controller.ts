@@ -1,9 +1,10 @@
-import { Controller, UseGuards, Post, Body, Get, Query, Param } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Get, Query, Param, Patch, Req } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ShipmentsService } from './shipments.service';
 import { CreateShipmentDto } from './dto/create-shipment.dto';
 import { Shipment } from './entities/shipment.entity';
 import { GetShipmentsDto } from './dto/get-shipments.dto';
+import { UpdateShipmentStatusDto } from './dto/update-shipment-status.dto';
 
 @Controller('shipments')
 @UseGuards(JwtAuthGuard)
@@ -35,4 +36,13 @@ export class ShipmentsController {
   ): Promise<Shipment> {
     return this.shipmentsService.create(dto)
   };
+
+  @Patch(':id/status')
+  updateStatus(
+    @Param('id') id: string,
+    @Body() dto: UpdateShipmentStatusDto,
+    @Req() request: { user: {sub: string }},
+  ): Promise<Shipment> {
+    return this.shipmentsService.updateStatus(id, dto, request.user.sub);
+  }
 }

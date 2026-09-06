@@ -15,6 +15,9 @@ export class ShipmentEvent extends BaseEntity {
   @Column()
   location!: string;
 
+  @Column({ nullable: true })
+  notes?: string;
+
   @ManyToOne(() => Shipment, shipment => shipment.events)
   shipment!: Shipment;
 

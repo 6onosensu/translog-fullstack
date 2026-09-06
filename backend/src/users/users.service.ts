@@ -17,6 +17,10 @@ export class UsersService {
     });
   }
 
+  findById(id: string): Promise<User | null> {
+    return this.userRepository.findOneBy({ id });
+  }
+
   create(
     email: string,
     passwordHash: string,
