@@ -31,5 +31,13 @@ export class UsersService {
     });
     return this.userRepository.save(user);
   }
+
+  findSupervisor(): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: {
+        role: UserRole.SUPERVISOR,
+      },
+    });
+  }
  
 }
