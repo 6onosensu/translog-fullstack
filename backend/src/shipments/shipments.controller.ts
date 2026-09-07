@@ -7,7 +7,10 @@ import { GetShipmentsDto } from './dto/get-shipments.dto';
 import { UpdateShipmentStatusDto } from './dto/update-shipment-status.dto';
 import { CancelShipmentDto } from './dto/cancel-shipment.dto';
 import { AssignVehiclesDto } from './dto/assign-vehicles.dto';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('shipments')
+@ApiBearerAuth()
 @Controller('shipments')
 @UseGuards(JwtAuthGuard)
 export class ShipmentsController { 
@@ -15,6 +18,7 @@ export class ShipmentsController {
     private readonly shipmentsService: ShipmentsService,
   ) {}
 
+  @ApiOperation({ summary: 'Get shipments' })
   @Get()
   findAll(
     @Query() query: GetShipmentsDto,
@@ -26,7 +30,14 @@ export class ShipmentsController {
   }> {
     return this.shipmentsService.findAll(query);
   }
+  
+  @ApiOperation({ summary: 'Get shipment by id' })
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<Shipment> {
+    return this.shipmentsService.findOne(id);
+  }
 
+  @ApiOperation({ summary: 'Create shipment' })
   @Post()
   create(
     @Body() dto: CreateShipmentDto,
@@ -34,18 +45,15 @@ export class ShipmentsController {
     return this.shipmentsService.create(dto)
   };
 
+  @ApiOperation({ summary: 'Assign shipments to vehicles' })
   @Post('assign-vehicles')
   assignVehicles(
     @Body() dto: AssignVehiclesDto,
   ) {
     return this.shipmentsService.assignVehicles(dto);
   }
-  
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<Shipment> {
-    return this.shipmentsService.findOne(id);
-  }
 
+  @ApiOperation({ summary: 'Update shipment status' })
   @Patch(':id/status')
   updateStatus(
     @Param('id') id: string,
@@ -59,6 +67,7 @@ export class ShipmentsController {
     );
   }
 
+  @ApiOperation({ summary: 'Cancel shipment' })
   @Delete(':id')
   cancel(
     @Param('id') id: string,

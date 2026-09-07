@@ -6,11 +6,15 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { UserRole } from '../users/enums/user-role.enum';
 import { Roles } from './decorators/roles.decorator';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Register user' })
   @Post('register')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.SUPERVISOR)
@@ -20,6 +24,7 @@ export class AuthController {
     return this.authService.register(registerDto);
   }
 
+  @ApiOperation({ summary: 'Login user' })
   @Post('login')
   login(
     @Body() loginDto: LoginDto
