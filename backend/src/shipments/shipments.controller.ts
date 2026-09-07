@@ -6,6 +6,7 @@ import { Shipment } from './entities/shipment.entity';
 import { GetShipmentsDto } from './dto/get-shipments.dto';
 import { UpdateShipmentStatusDto } from './dto/update-shipment-status.dto';
 import { CancelShipmentDto } from './dto/cancel-shipment.dto';
+import { AssignVehiclesDto } from './dto/assign-vehicles.dto';
 
 @Controller('shipments')
 @UseGuards(JwtAuthGuard)
@@ -32,6 +33,13 @@ export class ShipmentsController {
   ): Promise<Shipment> {
     return this.shipmentsService.create(dto)
   };
+
+  @Post('assign-vehicles')
+  assignVehicles(
+    @Body() dto: AssignVehiclesDto,
+  ) {
+    return this.shipmentsService.assignVehicles(dto);
+  }
   
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Shipment> {

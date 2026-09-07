@@ -9,6 +9,7 @@ import { TrackingCodeService } from './services/tracking-code.service';
 import { ShipmentStatusService } from './services/shipment-status.service';
 import { ShipmentEventsService } from './services/shipment-events.service';
 import { TrackingController } from './tracking.controller';
+import { VehicleAssignmentService } from './services/vehicle-assignment.service';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TrackingController } from './tracking.controller';
     TrackingCodeService,
     ShipmentStatusService,
     ShipmentEventsService,
+    VehicleAssignmentService,
   ],
   controllers: [
     ShipmentsController,

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Shipment } from './entities/shipment.entity';
@@ -12,6 +12,8 @@ import { ShipmentStatusService } from './services/shipment-status.service';
 import { ShipmentEventsService } from './services/shipment-events.service';
 import { User } from '../users/entities/user.entity';
 import { CancelShipmentDto } from './dto/cancel-shipment.dto';
+import { VehicleAssignmentService } from './services/vehicle-assignment.service';
+import { AssignVehiclesDto } from './dto/assign-vehicles.dto';
 
 @Injectable()
 export class ShipmentsService {
@@ -23,6 +25,7 @@ export class ShipmentsService {
     private readonly trackingCodeService: TrackingCodeService,
     private readonly shipmentStatusService: ShipmentStatusService,
     private readonly shipmentEventsService: ShipmentEventsService,
+    private readonly vehicleAssignmentService: VehicleAssignmentService,
   ) {}
 
   async findByTrackingCode(trackingCode: string): Promise<Shipment>{
@@ -130,6 +133,48 @@ export class ShipmentsService {
       dto.location,
       dto.notes,
     );
+  }
+
+  async assignVehicles(dto: AssignVehiclesDto) {
+    const shipments: Shipment[] = [];
+
+    for(const id of dto.shipmentIds) {
+      const shipment = await this.getById(id);
+
+      this.validateForAssignment(
+        shipment, 
+        dto.vehicleCapacity
+      );
+
+      shipments.push(shipment);
+    }
+
+    return this.vehicleAssignmentService.assign(
+      shipments,
+      dto.vehicleCapacity,
+    );
+  }
+
+  private async getById(id: string): Promise<Shipment> {
+    const shipment = await this.shipmentRepo.findOneBy({ id });
+    return this.getShipmentOrThrow(shipment);
+  }
+
+  private validateForAssignment(
+    shipment: Shipment,
+    capacity: number,
+  ): void {
+    if (shipment.status !== ShipmentStatus.IN_WAREHOUSE) {
+      throw new BadRequestException(
+        `Shipment ${shipment.trackingCode} is not in warehouse`,
+      );
+    }
+
+    if (Number(shipment.weight) > capacity) {
+      throw new BadRequestException(
+        `Shipment ${shipment.trackingCode} exceeds vehicle capacity`,
+      );
+    }
   }
 
   private async saveShipmentAndEvent(
