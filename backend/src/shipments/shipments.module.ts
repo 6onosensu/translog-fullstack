@@ -8,6 +8,7 @@ import { UsersModule } from '../users/users.module';
 import { TrackingCodeService } from './services/tracking-code.service';
 import { ShipmentStatusService } from './services/shipment-status.service';
 import { ShipmentEventsService } from './services/shipment-events.service';
+import { TrackingController } from './tracking.controller';
 
 @Module({
   imports: [
@@ -23,6 +24,9 @@ import { ShipmentEventsService } from './services/shipment-events.service';
     ShipmentStatusService,
     ShipmentEventsService,
   ],
-  controllers: [ShipmentsController]
+  controllers: [
+    ShipmentsController,
+    TrackingController,
+  ]
 })
 export class ShipmentsModule {}

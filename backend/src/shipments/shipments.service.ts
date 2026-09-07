@@ -25,17 +25,22 @@ export class ShipmentsService {
     private readonly shipmentEventsService: ShipmentEventsService,
   ) {}
 
+  async findByTrackingCode(trackingCode: string): Promise<Shipment>{
+    const shipment = await this.shipmentRepo.findOne({
+      where: { trackingCode },
+      relations: { events: true },
+    });
+
+    return this.getShipmentOrThrow(shipment);
+  }
+
   async findOne(id: string): Promise<Shipment> {
     const shipment = await this.shipmentRepo.findOne({
       where: { id },
       relations: { events: true },
     });
 
-    if(!shipment) {
-      throw new NotFoundException('Shipment not found');
-    }
-
-    return shipment;
+    return this.getShipmentOrThrow(shipment);
   }
 
   async findAll(query: GetShipmentsDto): Promise<{
@@ -128,19 +133,28 @@ export class ShipmentsService {
   }
 
   private async saveShipmentAndEvent(
-      shipment: Shipment,
-      user: User,
-      status: ShipmentStatus,
-      location: string,
-      notes?: string,
-    ): Promise<void> {
-      await this.shipmentRepo.save(shipment);
-      await this.shipmentEventsService.create(
-        shipment,
-        user,
-        status,
-        location,
-        notes,
-      );
+    shipment: Shipment,
+    user: User,
+    status: ShipmentStatus,
+    location: string,
+    notes?: string,
+  ): Promise<void> {
+    await this.shipmentRepo.save(shipment);
+    await this.shipmentEventsService.create(
+      shipment,
+      user,
+      status,
+      location,
+      notes,
+    );
+  }
+
+  private getShipmentOrThrow(
+    shipment: Shipment | null
+  ): Shipment {
+    if (!shipment) {
+      throw new NotFoundException('Shipment not found');
+    }
+    return shipment;
   }
 }
