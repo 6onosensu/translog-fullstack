@@ -4,10 +4,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-login',
   imports: [
+    HeaderComponent,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -18,6 +21,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent {
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   loginForm = new FormGroup({
     email: new FormControl('', [
@@ -38,6 +42,7 @@ export class LoginComponent {
     this.authService.login(email, password).subscribe({
       next: (response) => {
         localStorage.setItem('accessToken', response.accessToken);
+        this.router.navigate(['/shipments']);
         console.log(response);
       },
       error: (error) => {
