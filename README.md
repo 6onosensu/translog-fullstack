@@ -17,8 +17,8 @@ Shipment status changes are handled separately from shipment creation logic, and
 PostgreSQL is used as the database with TypeORM.
 
 ## Shipment status flow
-CREATED -> IN_WAREHOUSE -> IN_TRANSIT -> OUT_FOR_DELIVERY -> DELIVERED
-A shipment can also transition from OUT_FOR_DELIVERY to RETURNED.
+CREATED -> IN_WAREHOUSE -> IN_TRANSIT -> OUT_FOR_DELIVERY -> DELIVERED  
+A shipment can also transition from OUT_FOR_DELIVERY to RETURNED.  
 A shipment can be cancelled from any status except DELIVERED.
 
 ## Vehicle assignment algorithm
