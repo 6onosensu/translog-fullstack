@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,8 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  private authService = inject(AuthService);
+
   loginForm = new FormGroup({
     email: new FormControl('', [
       Validators.required,
@@ -25,6 +28,21 @@ export class LoginComponent {
   });
 
   onSubmit() {
-    console.log(this.loginForm.value);
+    const email = this.loginForm.value.email;
+    const password = this.loginForm.value.password;
+
+    if (!email || !password) {
+      return;
+    }
+
+    this.authService.login(email, password).subscribe({
+      next: (response) => {
+        localStorage.setItem('accessToken', response.accessToken);
+        console.log(response);
+      },
+      error: (error) => {
+        console.log(error);
+      },  
+    });
   }
 }

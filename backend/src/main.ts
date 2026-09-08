@@ -14,6 +14,10 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new HttpExceptionFilter());
 
+  app.enableCors({
+    origin: 'http://localhost:4200'
+  })
+
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Translog API')
     .setVersion('1.0')
