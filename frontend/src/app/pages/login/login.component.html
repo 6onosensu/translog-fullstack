@@ -1,9 +1,33 @@
-<label for="email">Email</label>
+<div class="login-page">
+  <form
+    class="login-form"
+    [formGroup]="loginForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <h1>Login</h1>
 
-<input
-  id="email"
-  type="email"
-  [formControl]="email"
-/>
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        id="email"
+        type="email"
+        formControlName="email"
+      >
+    </mat-form-field>
 
-<p>{{ email.value }}</p>
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        id="password"
+        type="password"
+        formControlName="password"
+      >
+    </mat-form-field>
+
+    <button mat-flat-button type="submit">
+      Login
+    </button>
+  </form>
+</div>
