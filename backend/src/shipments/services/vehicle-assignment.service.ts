@@ -18,10 +18,7 @@ export class VehicleAssignmentService {
       let assigned = false;
 
       for(const vehicle of vehicles) {
-        const currentWeight = vehicle.reduce(
-          (sum, item) => sum + Number(item.weight),
-          0,
-        );
+        const currentWeight = this.getTotalWeight(vehicle);
 
         if (currentWeight + shipmentWeight <= capacity) {
           vehicle.push(shipment);
@@ -37,15 +34,19 @@ export class VehicleAssignmentService {
     return this.formatResult(vehicles, capacity);
   }
 
+  private getTotalWeight(shipments: Shipment[]): number {
+    return shipments.reduce(
+      (sum, shipment) => sum + Number(shipment.weight),
+      0,
+    );
+  }
+
   private formatResult(
     vehicles: Shipment[][],
     capacity: number,
   ) {
     const formattedVehicles = vehicles.map((vehicle, index) => {
-      const totalWeight = vehicle.reduce(
-        (sum, shipment) => sum + Number(shipment.weight),
-        0,
-      );
+      const totalWeight = this.getTotalWeight(vehicle);
 
       return {
         vehicleNumber: index + 1,
