@@ -9,6 +9,12 @@ export interface ShipmentEvent {
   status: string;
   location: string;
   notes?: string;
+  user: {
+    id: string;
+    email: string;
+    name:string;
+    role: string;
+  }
 }
 
 export interface Shipment {
@@ -59,5 +65,21 @@ export class ShipmentsService {
     return this.http.get<Shipment>(
       `${environment.apiUrl}/shipments/${id}`,
     );
+  }
+
+  updateShipmentStatus(
+    id: string,
+    status: string,
+    location: string,
+    notes?: string,
+  ) {
+    return this.http.patch(
+      `${environment.apiUrl}/shipments/${id}/status`,
+      {
+        status,
+        location,
+        notes,
+      },
+    )
   }
 }

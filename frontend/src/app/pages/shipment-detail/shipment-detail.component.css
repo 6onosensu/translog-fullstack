@@ -60,3 +60,14 @@ h1 {
 .history-item p {
   margin: 6px 0;
 }
+
+.status-form {
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-form button {
+  align-self: flex-end;
+}

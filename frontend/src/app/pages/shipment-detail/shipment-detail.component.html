@@ -52,6 +52,53 @@
       </div>
     </section>
 
+    @if (getNextStatuses(shipment.status).length > 0) {
+      <section class="status-update">
+        <h2>Update Status</h2>
+
+        <form 
+          [formGroup]="statusForm" 
+          (ngSubmit)="onStatusSubmit()"
+          class="status-form"
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>New status</mat-label>
+
+            <mat-select formControlName="status">
+              @for (status of getNextStatuses(shipment.status); track status) {
+                <mat-option [value]="status">
+                  {{ status }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+
+            <input
+              matInput
+              type="text"
+              formControlName="location"
+            >
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Notes</mat-label>
+
+            <textarea
+              matInput
+              formControlName="notes"
+            ></textarea>
+          </mat-form-field>
+
+          <button mat-flat-button type="submit">
+            Update Status
+          </button>
+        </form>
+      </section>
+    }
+
     <section class="history">
       <h2>Status History</h2>
 
@@ -69,6 +116,12 @@
               <strong>Location:</strong>
               {{ event.location }}
             </p>
+            
+            <p>
+              <strong>Updated by:</strong>
+              {{ event.user.name }}
+            </p>
+            
             @if (event.notes) {
               <p>
                 <strong>Notes:</strong>

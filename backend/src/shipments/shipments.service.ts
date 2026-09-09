@@ -40,7 +40,8 @@ export class ShipmentsService {
   async findOne(id: string): Promise<Shipment> {
     const shipment = await this.shipmentRepo.findOne({
       where: { id },
-      relations: { events: true },
+      relations: { events: { user: true }},
+      order: { events: { createdAt: 'ASC' }},
     });
 
     return this.getShipmentOrThrow(shipment);
