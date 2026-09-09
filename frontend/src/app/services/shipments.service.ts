@@ -24,19 +24,20 @@ export interface ShipmentsResponse {
 export class ShipmentsService {
   private http = inject(HttpClient);
 
-  getShipments(status?: string) {
-  if (status) {
+  getShipments(status?: string, page = 1) {
+    if (status) {
+      return this.http.get<ShipmentsResponse>(
+        `${environment.apiUrl}/shipments`,
+        {
+          params: { status, page },
+        },
+      );
+    }
+
     return this.http.get<ShipmentsResponse>(
       `${environment.apiUrl}/shipments`,
-      {
-        params: { status },
-      },
+      { params: { page } },
     );
   }
-
-  return this.http.get<ShipmentsResponse>(
-    `${environment.apiUrl}/shipments`,
-  );
-}
 
 }

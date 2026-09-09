@@ -5,6 +5,7 @@ import { MatTableModule } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-shipments',
@@ -14,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
     DatePipe,
     MatFormFieldModule,
     MatSelectModule,
+    MatPaginatorModule,
   ],
   templateUrl: './shipments.component.html',
   styleUrl: './shipments.component.css'
@@ -21,6 +23,11 @@ import { MatSelectModule } from '@angular/material/select';
 export class ShipmentsComponent {
   private shipmentsService = inject(ShipmentsService);
   shipments: Shipment[] = [];
+
+  total = 0;
+  page = 1;
+  selectedStatus = '';
+
   displayedColumns: string[] = [
     'trackingCode',
     'recipientName',
@@ -29,26 +36,31 @@ export class ShipmentsComponent {
     'createdAt',
   ]
 
-  statuses = [
-    'CREATED',
-    'IN_WAREHOUSE',
-    'IN_TRANSIT',
-    'OUT_FOR_DELIVERY',
-    'DELIVERED',
-    'RETURNED',
-    'CANCELLED',
-  ];
-
   ngOnInit() {
     this.loadShipments();
   }
 
-  loadShipments(status?: string) {
-    this.shipmentsService.getShipments(status).subscribe({
-      next: (response) => {
-        this.shipments = response.items;
-      },
-      error: (error) => console.log(error),
-    });
+  loadShipments() {
+    this.shipmentsService
+      .getShipments(this.selectedStatus, this.page)
+      .subscribe({
+        next: (response) => {
+          this.shipments = response.items;
+          this.total = response.total;
+          this.page = response.page;
+        },
+        error: (error) => console.log(error),
+      });
+  }
+
+  onStatusChange(status: string) {
+    this.selectedStatus = status;
+    this.page = 1;
+    this.loadShipments();
+  }
+
+  onPageChange(event: PageEvent) {
+    this.page = event.pageIndex + 1;
+    this.loadShipments();
   }
 }

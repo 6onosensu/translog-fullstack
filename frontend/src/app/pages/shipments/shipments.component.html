@@ -6,7 +6,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Status</mat-label>
 
-    <mat-select (selectionChange)="loadShipments($event.value)">
+    <mat-select (selectionChange)="onStatusChange($event.value)">
       <mat-option value="">All</mat-option>
       <mat-option value="CREATED">Created</mat-option>
       <mat-option value="IN_WAREHOUSE">In warehouse</mat-option>
@@ -63,6 +63,13 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
   </table>
+
+  <mat-paginator
+    [length]="total"
+    [pageSize]="10"
+    [pageIndex]="page - 1"
+    (page)="onPageChange($event)"
+  ></mat-paginator>
   
 </main>
 
