@@ -11,6 +11,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'register',
+    canActivate: [authGuard, supervisorGuard],
+    loadComponent: () =>
+      import('./pages/register/register.component').then(
+        (component) => component.RegisterComponent,
+      ),
+  },
+  {
     path: 'shipments',
     canActivate: [authGuard],
     loadComponent: () =>
@@ -19,11 +27,11 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'register',
-    canActivate: [authGuard, supervisorGuard],
+    path: 'shipments/create',
+    canActivate: [authGuard],
     loadComponent: () =>
-      import('./pages/register/register.component').then(
-        (component) => component.RegisterComponent,
+      import('./pages/create-shipment/create-shipment.component').then(
+        (component) => component.CreateShipmentComponent,
       ),
   },
   {

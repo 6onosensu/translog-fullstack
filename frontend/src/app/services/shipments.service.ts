@@ -94,4 +94,23 @@ export class ShipmentsService {
       },
     );
   }
+
+  createShipment(
+    originAddress: string,
+    destinationAddress: string,
+    recipientName: string,
+    weight: number,
+    recipientPhone?: string,
+  ) {
+    return this.http.post(
+      `${environment.apiUrl}/shipments`,
+      {
+        originAddress,
+        destinationAddress,
+        recipientName,
+        recipientPhone,
+        weight,
+      }
+    )
+  }
 }

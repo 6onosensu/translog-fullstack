@@ -1,0 +1,44 @@
+<app-header />
+
+<main class="page-container">
+  <h1>Create Shipment</h1>
+  <form
+    [formGroup]="shipmentForm"
+    (ngSubmit)="onSubmit()"
+    class="shipment-form"
+  >
+    <mat-form-field appearance="outline">
+      <mat-label>Origin address</mat-label>
+      <input matInput formControlName="originAddress">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Destination address</mat-label>
+      <input matInput formControlName="destinationAddress">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Recipient name</mat-label>
+      <input matInput formControlName="recipientName">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Recipient phone</mat-label>
+      <input matInput formControlName="recipientPhone">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Weight (kg)</mat-label>
+      <input 
+        matInput 
+        type="number"
+        min="0"
+        formControlName="weight"
+      >
+    </mat-form-field>
+
+    <button mat-flat-button type="submit">
+      Create Shipment
+    </button>
+  </form>
+</main>

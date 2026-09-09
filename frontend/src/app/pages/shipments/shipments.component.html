@@ -2,21 +2,27 @@
 
 <main class="page-container">
   <h1>Shipments</h1>
+  
+  <div class="shipments-actions">
+    <a mat-flat-button routerLink="/shipments/create">
+      Create Shipment
+    </a>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Status</mat-label>
+    <mat-form-field appearance="outline" >
+      <mat-label>Status</mat-label>
 
-    <mat-select (selectionChange)="onStatusChange($event.value)">
-      <mat-option value="">All</mat-option>
-      <mat-option value="CREATED">Created</mat-option>
-      <mat-option value="IN_WAREHOUSE">In warehouse</mat-option>
-      <mat-option value="IN_TRANSIT">In transit</mat-option>
-      <mat-option value="OUT_FOR_DELIVERY">Out for delivery</mat-option>
-      <mat-option value="DELIVERED">Delivered</mat-option>
-      <mat-option value="RETURNED">Returned</mat-option>
-      <mat-option value="CANCELLED">Cancelled</mat-option>
-    </mat-select>
-  </mat-form-field>
+      <mat-select (selectionChange)="onStatusChange($event.value)">
+        <mat-option value="">All</mat-option>
+        <mat-option value="CREATED">Created</mat-option>
+        <mat-option value="IN_WAREHOUSE">In warehouse</mat-option>
+        <mat-option value="IN_TRANSIT">In transit</mat-option>
+        <mat-option value="OUT_FOR_DELIVERY">Out for delivery</mat-option>
+        <mat-option value="DELIVERED">Delivered</mat-option>
+        <mat-option value="RETURNED">Returned</mat-option>
+        <mat-option value="CANCELLED">Cancelled</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
   
   <table mat-table [dataSource]="shipments">
     <ng-container matColumnDef="trackingCode">
