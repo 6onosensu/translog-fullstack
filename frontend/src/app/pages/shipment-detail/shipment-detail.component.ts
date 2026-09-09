@@ -35,6 +35,11 @@ export class ShipmentDetailComponent {
     notes: new FormControl(''),
   });
 
+  cancelForm = new FormGroup({
+    location: new FormControl('', Validators.required),
+    notes: new FormControl(''),
+  });
+
   getNextStatuses(status: string): string[] {
     switch (status) {
       case 'CREATED':
@@ -56,7 +61,7 @@ export class ShipmentDetailComponent {
 
   onStatusSubmit() {
     if (!this.shipmentId) return;
-    
+
     const status = this.statusForm.value.status;
     const location = this.statusForm.value.location;
     const notes = this.statusForm.value.notes;
@@ -77,6 +82,31 @@ export class ShipmentDetailComponent {
         console.log(error);
       }
     })
+  }
+
+  onCancel() {
+    if (!this.shipmentId) return;
+
+    const location = this.cancelForm.value.location;
+    const notes = this.cancelForm.value.notes;
+
+    if (!location) return;
+
+    this.shipmentsService
+      .cancelShipment(
+        this.shipmentId,
+        location,
+        notes || undefined,
+      )
+      .subscribe({
+        next: () => {
+          this.cancelForm.reset();
+          this.loadShipment();
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
   }
 
   ngOnInit() {

@@ -82,4 +82,16 @@ export class ShipmentsService {
       },
     )
   }
+
+  cancelShipment(id: string, location: string, notes?: string) {
+    return this.http.delete(
+      `${environment.apiUrl}/shipments/${id}`,
+      {
+        body: {
+          location,
+          notes,
+        },
+      },
+    );
+  }
 }

@@ -61,8 +61,31 @@ h1 {
   margin: 6px 0;
 }
 
-.status-form {
+.cancel-section {
+  max-width: 500px;
+}
+
+.cancel-section h2 {
+  margin-bottom: 16px;
+}
+
+.shipment-actions {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.status-update,
+.cancel-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.status-update {
   max-width: 700px;
+}
+.status-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
