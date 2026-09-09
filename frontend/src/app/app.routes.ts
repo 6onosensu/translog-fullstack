@@ -17,4 +17,12 @@ export const routes: Routes = [
         (component) => component.ShipmentsComponent,
       ),
   },
+  {
+    path: 'register',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/register/register.component').then(
+        (component) => component.RegisterComponent,
+      ),
+  },
 ];

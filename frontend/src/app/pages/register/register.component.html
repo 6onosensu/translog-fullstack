@@ -1,0 +1,40 @@
+<app-header />
+
+<main class="page-container">
+  <h1>Register User</h1>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="name"
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        type="email"
+        formControlName="email"
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role">
+        <mat-option value="OPERATOR">Operator</mat-option>
+        <mat-option value="SUPERVISOR">Supervisor</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <p>Default password: <strong>change_me</strong></p>
+
+    <button mat-flat-button type="submit">
+      Register
+    </button>
+  </form>
+
+</main>
