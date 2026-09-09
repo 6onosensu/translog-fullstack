@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { environment } from '../environments/environments';
 
 interface CurrentUser {
   email: string;
@@ -14,7 +15,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.http.post<{ accessToken: string }> (
-      'http://localhost:3000/auth/login',
+      `${environment.apiUrl}/auth/login`,
       {
         email,
         password,
@@ -29,7 +30,7 @@ export class AuthService {
     role: string
   ) {
     return this.http.post(
-      'http://localhost:3000/auth/register', 
+      `${environment.apiUrl}/auth/register`, 
       {
         name,
         email,

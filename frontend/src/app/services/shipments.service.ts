@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { environment } from '../environments/environments';
 
 export interface Shipment {
   id: string;
@@ -23,10 +24,19 @@ export interface ShipmentsResponse {
 export class ShipmentsService {
   private http = inject(HttpClient);
 
-  getShipments() {
+  getShipments(status?: string) {
+  if (status) {
     return this.http.get<ShipmentsResponse>(
-      'http://localhost:3000/shipments',
+      `${environment.apiUrl}/shipments`,
+      {
+        params: { status },
+      },
     );
   }
+
+  return this.http.get<ShipmentsResponse>(
+    `${environment.apiUrl}/shipments`,
+  );
+}
 
 }
