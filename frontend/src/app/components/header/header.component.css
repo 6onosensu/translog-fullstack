@@ -6,3 +6,8 @@
 .spacer {
   flex: 1;
 }
+
+.user-info {
+  margin-right: 16px;
+  font-size: 14px;
+}

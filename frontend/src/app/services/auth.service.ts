@@ -1,6 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
+interface CurrentUser {
+  email: string;
+  role: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -36,5 +41,14 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('accessToken');
+  }
+
+  getCurrentUser(): CurrentUser | null {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+
+    return payload;
   }
 }

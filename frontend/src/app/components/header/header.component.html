@@ -5,13 +5,21 @@
     <a mat-button routerLink="/shipments">
       Shipments
     </a>
+    
+    @if (currentUser?.role === 'SUPERVISOR') {
+      <a mat-button routerLink="/register">
+        Register
+      </a>
+    }
   </nav>
-  <a mat-button routerLink="/register">
-    Register
-  </a>
 
   <span class="spacer"></span>
 
+  @if (currentUser) {
+    <span class="user-info">
+      {{ currentUser.email }}
+    </span>
+  }
   <button mat-button (click)="logout()">
     Logout
   </button>

@@ -18,6 +18,8 @@ export class HeaderComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
+  currentUser = this.authService.getCurrentUser();
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);

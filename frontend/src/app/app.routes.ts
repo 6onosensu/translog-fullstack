@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
+import { supervisorGuard } from './guards/supervisor.guard';
 
 export const routes: Routes = [
   {
@@ -19,7 +20,7 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    canActivate: [authGuard],
+    canActivate: [authGuard, supervisorGuard],
     loadComponent: () =>
       import('./pages/register/register.component').then(
         (component) => component.RegisterComponent,
