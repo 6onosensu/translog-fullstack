@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-shipments',
@@ -16,6 +17,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
     MatFormFieldModule,
     MatSelectModule,
     MatPaginatorModule,
+    RouterLink,
   ],
   templateUrl: './shipments.component.html',
   styleUrl: './shipments.component.css'

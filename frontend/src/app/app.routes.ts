@@ -26,4 +26,12 @@ export const routes: Routes = [
         (component) => component.RegisterComponent,
       ),
   },
+  {
+    path: 'shipments/:id',
+    canActivate: [authGuard],
+    loadComponent: () => 
+      import('./pages/shipment-detail/shipment-detail.component').then(
+        (component) => component.ShipmentDetailComponent,
+      ),
+  },
 ];

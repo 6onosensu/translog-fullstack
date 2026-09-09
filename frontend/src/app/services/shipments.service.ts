@@ -2,13 +2,28 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../environments/environments';
 
+export interface ShipmentEvent {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  status: string;
+  location: string;
+  notes?: string;
+}
+
 export interface Shipment {
   id: string;
-  trackingCode: string;
-  recipientName: string;
-  destination: string;
-  status: string;
   createdAt: string;
+  updatedAt: string;
+  trackingCode: string;
+  status: string;
+  originAddress: string;
+  destinationAddress: string;
+  recipientName: string;
+  recipientPhone?: string;
+  weight: string;
+  deliveredAt: string | null;
+  events?: ShipmentEvent[];
 }
 
 export interface ShipmentsResponse {
@@ -40,4 +55,9 @@ export class ShipmentsService {
     );
   }
 
+  getShipmentById(id: string) {
+    return this.http.get<Shipment>(
+      `${environment.apiUrl}/shipments/${id}`,
+    );
+  }
 }

@@ -1,0 +1,85 @@
+<app-header />
+
+<main class="page-container">
+  <h1>Shipment Details</h1>
+
+  @if (shipment) {
+    <section class="shipment-card">
+      <div class="shipment-header">
+        <div>
+          <span class="label">Tracking code</span>
+          <h2>{{ shipment.trackingCode }}</h2>
+        </div>
+
+        <span 
+          class="status"
+          [class]="shipment.status.toLowerCase()"
+        >
+          {{ shipment.status }}
+        </span>
+      </div>
+
+      <div class="shipment-info">
+        <div>
+          <span class="label">Origin</span>
+          <p>{{ shipment.originAddress }}</p>
+        </div>
+
+        <div>
+          <span class="label">Destination</span>
+          <p>{{ shipment.destinationAddress }}</p>
+        </div>
+
+        <div>
+          <span class="label">Recipient</span>
+          <p>{{ shipment.recipientName }}</p>
+        </div>
+
+        <div>
+          <span class="label">Phone</span>
+          <p>{{ shipment.recipientPhone || '-' }}</p>
+        </div>
+
+        <div>
+          <span class="label">Weight</span>
+          <p>{{ shipment.weight }} kg</p>
+        </div>
+
+        <div>
+          <span class="label">Created</span>
+          <p>{{ shipment.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="history">
+      <h2>Status History</h2>
+
+      @if (shipment.events && shipment.events.length > 0) {
+        @for (event of shipment.events; track event.id) {
+          <div class="history-item">
+            <div class="history-header">
+              <strong>{{ event.status }}</strong>
+
+              <span>
+                {{ event.createdAt | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+            </div>
+            <p>
+              <strong>Location:</strong>
+              {{ event.location }}
+            </p>
+            @if (event.notes) {
+              <p>
+                <strong>Notes:</strong>
+                {{ event.notes }}
+              </p>
+            }
+          </div>
+        }
+      } @else {
+        <p>No status changes yet.</p>
+      }
+    </section>
+  }
+</main>
