@@ -1,20 +1,32 @@
 import { Component, inject } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
-import { ShipmentsService } from '../../services/shipments.service';
+import { Shipment, ShipmentsService } from '../../services/shipments.service';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-shipments',
-  imports: [HeaderComponent],
+  imports: [
+    HeaderComponent,
+    MatTableModule,
+  ],
   templateUrl: './shipments.component.html',
   styleUrl: './shipments.component.css'
 })
 export class ShipmentsComponent {
   private shipmentsService = inject(ShipmentsService);
-  
+  shipments: Shipment[] = [];
+  displayedColumns: string[] = [
+    'trackingCode',
+    'recipientName',
+    'destinationAddress',
+    'status',
+    'createdAt',
+  ]
+
   ngOnInit() {
     this.shipmentsService.getShipments().subscribe({
       next: (response) => {
-        console.log(response);
+        this.shipments = response.items;
       },
       error: (error) => {
         console.log(error);

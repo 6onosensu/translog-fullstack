@@ -5,12 +5,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-login',
   imports: [
-    HeaderComponent,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
