@@ -5,10 +5,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { Shipment, ShipmentsService } from '../../services/shipments.service';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-tracking',
   imports: [
+    HeaderComponent,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,

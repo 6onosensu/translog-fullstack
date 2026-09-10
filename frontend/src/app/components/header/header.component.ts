@@ -19,9 +19,15 @@ export class HeaderComponent {
   private router = inject(Router);
 
   currentUser = this.authService.getCurrentUser();
+  isLoginPage = this.router.url === '/login';
+  isMainPage = this.router.url === '/';
 
   logout() {
     this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  login() {
     this.router.navigate(['/login']);
   }
 }

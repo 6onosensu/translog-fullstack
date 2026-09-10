@@ -1,26 +1,43 @@
 <mat-toolbar>
-  <span class="logo">TransLog</span>
-
-  <nav>
-    <a mat-button routerLink="/shipments">
-      Shipments
-    </a>
-    
-    @if (currentUser?.role === 'SUPERVISOR') {
-      <a mat-button routerLink="/register">
-        Register
-      </a>
-    }
-  </nav>
-
+  <a class="logo" routerLink="/">
+    TransLog
+  </a>
+  
   <span class="spacer"></span>
+  
+  @if (!isMainPage) {
+    <a mat-button routerLink="/">
+      Track your code
+    </a>
+  }
 
   @if (currentUser) {
+    <nav>
+      <a mat-button routerLink="/shipments">
+        Shipments
+      </a>
+      
+      @if (currentUser.role === 'SUPERVISOR') {
+        <a mat-button routerLink="/register">
+          Register
+        </a>
+      }
+    </nav>
+
+    <span class="spacer"></span>
+
     <span class="user-info">
       {{ currentUser.email }}
     </span>
+
+    <button mat-button (click)="logout()">
+      Logout
+    </button>
+  } @else { 
+    @if (!isLoginPage) {
+      <button mat-button (click)="login()">
+        Login
+      </button> 
+    }
   }
-  <button mat-button (click)="logout()">
-    Logout
-  </button>
 </mat-toolbar>
