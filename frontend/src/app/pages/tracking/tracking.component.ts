@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { Shipment, ShipmentsService } from '../../services/shipments.service';
 import { HeaderComponent } from '../../components/header/header.component';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-tracking',
@@ -21,6 +22,7 @@ import { HeaderComponent } from '../../components/header/header.component';
   styleUrl: './tracking.component.css'
 })
 export class TrackingComponent {
+  private notification = inject(NotificationService);
   private shipmentService = inject(ShipmentsService);
 
   shipment: Shipment | null = null;
@@ -40,7 +42,7 @@ export class TrackingComponent {
       },
       error: (error) => {
         this.shipment = null;
-        console.log(error);
+        this.notification.error('Shipment not found');
       },
     });
   }

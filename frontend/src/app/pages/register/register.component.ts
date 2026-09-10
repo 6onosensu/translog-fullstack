@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { HeaderComponent } from '../../components/header/header.component';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +23,9 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-private authService = inject(AuthService);
+  private notification = inject(NotificationService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   registerForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -42,11 +46,14 @@ private authService = inject(AuthService);
   const password = 'change_me'
 
   this.authService.register(name, email, password, role).subscribe({
-    next: (response) => {
-      console.log(response);
+    next: () => {
+      this.router.navigate(['/shipments']).then(() => {
+        this.notification.success('User registered');
+      });
+      
     },
-    error: (error) => {
-      console.log(error);
+    error: () => {
+      this.notification.error('Failed to register user');
     },
   });
   }

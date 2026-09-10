@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-shipment-detail',
@@ -24,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './shipment-detail.component.css'
 })
 export class ShipmentDetailComponent {
+  private notification = inject(NotificationService);
   private route = inject(ActivatedRoute);
   private shipmentsService = inject(ShipmentsService);
   shipmentId = this.route.snapshot.paramMap.get('id');
@@ -75,11 +77,12 @@ export class ShipmentDetailComponent {
       notes || undefined,
     ).subscribe({
       next: () => {
+        this.notification.success('Shipment status updated');
         this.loadShipment();
         this.statusForm.reset();
       },
-      error: (error) => {
-        console.log(error);
+      error: () => {
+        this.notification.error('Failed to update shipment status');
       }
     })
   }
@@ -102,9 +105,10 @@ export class ShipmentDetailComponent {
         next: () => {
           this.cancelForm.reset();
           this.loadShipment();
+          this.notification.success('Shipment cancelled');
         },
-        error: (error) => {
-          console.log(error);
+        error: () => {
+          this.notification.error('Failed to cancel shipment');
         },
       });
   }
@@ -121,8 +125,8 @@ export class ShipmentDetailComponent {
         next: (response) => {
           this.shipment = response;
         },
-        error: (error) => {
-          console.log(error);
+        error: () => {
+          this.notification.error('Failed to load shipment');
         },
       });
   }

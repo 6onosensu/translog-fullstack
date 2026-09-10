@@ -6,6 +6,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-create-shipment',
@@ -20,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './create-shipment.component.css'
 })
 export class CreateShipmentComponent {
+  private notification = inject(NotificationService);
   private shipmentsService = inject(ShipmentsService);
   private router = inject(Router);
 
@@ -58,10 +60,12 @@ export class CreateShipmentComponent {
       recipientPhone || undefined,
     ).subscribe({
       next: () => {
-        this.router.navigate(['/shipments']);
+        this.router.navigate(['/shipments']).then(() => {
+          this.notification.success('Shipment created');
+        });
       },
-      error: (error) => {
-        console.log(error);
+      error: () => {
+        this.notification.error('Failed to create shipment');
       },
     });
   }

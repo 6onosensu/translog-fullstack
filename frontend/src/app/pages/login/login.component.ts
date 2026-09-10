@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ import { HeaderComponent } from '../../components/header/header.component';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  private notification = inject(NotificationService);
   private authService = inject(AuthService);
   private router = inject(Router);
 
@@ -43,10 +45,9 @@ export class LoginComponent {
       next: (response) => {
         localStorage.setItem('accessToken', response.accessToken);
         this.router.navigate(['/shipments']);
-        console.log(response);
       },
-      error: (error) => {
-        console.log(error);
+      error: () => {
+        this.notification.error('Invalid email or password');
       },  
     });
   }

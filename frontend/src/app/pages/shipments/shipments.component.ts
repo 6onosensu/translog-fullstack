@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { RouterLink } from '@angular/router';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-shipments',
@@ -23,6 +24,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './shipments.component.css'
 })
 export class ShipmentsComponent {
+  private notification = inject(NotificationService);
   private shipmentsService = inject(ShipmentsService);
   shipments: Shipment[] = [];
 
@@ -51,7 +53,9 @@ export class ShipmentsComponent {
           this.total = response.total;
           this.page = response.page;
         },
-        error: (error) => console.log(error),
+        error: () => this.notification.error(
+          'Failed to load shipments'
+        ),
       });
   }
 
