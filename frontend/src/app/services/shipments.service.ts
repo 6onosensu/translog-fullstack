@@ -45,6 +45,12 @@ export interface ShipmentsResponse {
 export class ShipmentsService {
   private http = inject(HttpClient);
 
+  trackShipment(trackingCode: string) {
+    return this.http.get<Shipment>(
+      `${environment.apiUrl}/tracking/${trackingCode}`,
+    );
+  }
+
   getShipments(status?: string, page = 1) {
     if (status) {
       return this.http.get<ShipmentsResponse>(

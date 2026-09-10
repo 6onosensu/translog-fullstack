@@ -1,0 +1,68 @@
+<main class="tracking-page">
+  <h1>Translog Tracking</h1>
+
+  <p>Enter your tracking code</p>
+
+  <form
+    [formGroup]="trackingForm"
+    (ngSubmit)="onSubmit()"
+    class="tracking-form"
+  >
+    <mat-form-field appearance="outline">
+      <mat-label>Tracking code</mat-label>
+      <input
+        matInput
+        formControlName="trackingCode"
+        placeholder="ENV-YYYYMMDD-XXXX"
+      >
+    </mat-form-field>
+
+    <button mat-flat-button type="submit">
+      Track Shipment
+    </button>
+  </form>
+
+  @if (shipment) {
+    <section class="tracking-result">
+      <h2>{{ shipment.trackingCode }}</h2>
+
+      <div class="shipment-status">
+        <strong>Current status:</strong>
+        <span
+          class="status"
+          [class]="shipment.status.toLowerCase()"
+        >
+          {{ shipment.status }}
+        </span>
+      </div>
+
+      <h3>Shipment History</h3>
+
+      @if (shipment.events && shipment.events.length > 0) {
+        <div class="history">
+          @for (event of shipment.events; track event.id) {
+            <div class="history-item">
+              <strong>{{ event.status }}</strong>
+              <p>
+                {{ event.createdAt | date:'dd/MM/yyyy HH:mm'}}
+              </p>
+              <p>
+                <strong>Location:</strong>
+                {{ event.location }}
+              </p>
+
+              @if (event.notes) {
+                <p>
+                  <strong>Notes:</strong>
+                  {{ event.notes }}
+                </p>
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <p>No status changes yet.</p>
+      }
+    </section>
+  }
+</main>

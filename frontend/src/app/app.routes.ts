@@ -4,6 +4,13 @@ import { supervisorGuard } from './guards/supervisor.guard';
 
 export const routes: Routes = [
   {
+    path: '',
+    loadComponent: () =>
+      import('./pages/tracking/tracking.component').then(
+        (component) => component.TrackingComponent,
+      ),
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('./pages/login/login.component').then(
