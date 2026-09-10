@@ -32,8 +32,16 @@
 
     <p>Default password: <strong>change_me</strong></p>
 
-    <button mat-flat-button type="submit">
-      Register
+    <button 
+      mat-flat-button 
+      type="submit"
+      [disabled]="loading"
+    >
+      @if (loading) {
+        Registering...
+      } @else {
+        Register
+      }
     </button>
   </form>
 

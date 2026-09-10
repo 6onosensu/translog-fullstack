@@ -2,8 +2,9 @@
 
 <main class="page-container">
   <h1>Shipment Details</h1>
-
-  @if (shipment) {
+  @if (loading) {
+    <p>Loading shipment...</p>
+  } @else if (shipment) {
     <section class="shipment-card">
       <div class="shipment-header">
         <div>
@@ -93,8 +94,16 @@
               ></textarea>
             </mat-form-field>
 
-            <button mat-flat-button type="submit">
-              Update Status
+            <button 
+              mat-flat-button 
+              type="submit"
+              [disabled]="updatingStatus"
+            >
+              @if (updatingStatus) {
+                Updating...
+              } @else {
+                Update Status
+              }
             </button>
           </form>
         </section>
@@ -122,8 +131,16 @@
               <textarea matInput formControlName="notes"></textarea>
             </mat-form-field>
 
-            <button mat-stroked-button type="submit">
-              Cancel Shipment
+            <button 
+              mat-stroked-button 
+              type="submit"
+              [disabled]="cancelling"
+            >
+              @if (cancelling) {
+                Cancelling...
+              } @else {
+                Cancel Shipment
+              }
             </button>
           </form>
         </section>

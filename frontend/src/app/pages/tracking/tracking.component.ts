@@ -26,6 +26,7 @@ export class TrackingComponent {
   private shipmentService = inject(ShipmentsService);
 
   shipment: Shipment | null = null;
+  loading = false;
 
   trackingForm = new FormGroup({
     trackingCode: new FormControl('', Validators.required),
@@ -36,12 +37,16 @@ export class TrackingComponent {
 
     if (!trackingCode) return;
 
+    this.loading = true;
+    this.shipment = null;
+
     this.shipmentService.trackShipment(trackingCode).subscribe({
       next: (response) => {
         this.shipment = response;
+        this.loading = false;
       },
-      error: (error) => {
-        this.shipment = null;
+      error: () => {
+        this.loading = false;
         this.notification.error('Shipment not found');
       },
     });

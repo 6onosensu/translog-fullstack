@@ -31,6 +31,10 @@ export class ShipmentDetailComponent {
   shipmentId = this.route.snapshot.paramMap.get('id');
   shipment: Shipment | null = null;
 
+  loading = false;
+  updatingStatus = false;
+  cancelling = false
+
   statusForm = new FormGroup({
     status: new FormControl('', Validators.required),
     location: new FormControl('', Validators.required),
@@ -63,6 +67,8 @@ export class ShipmentDetailComponent {
 
   onStatusSubmit() {
     if (!this.shipmentId) return;
+    this.updatingStatus = true;
+
 
     const status = this.statusForm.value.status;
     const location = this.statusForm.value.location;
@@ -78,10 +84,12 @@ export class ShipmentDetailComponent {
     ).subscribe({
       next: () => {
         this.notification.success('Shipment status updated');
+        this.updatingStatus = false;
         this.loadShipment();
         this.statusForm.reset();
       },
       error: () => {
+        this.updatingStatus = false;
         this.notification.error('Failed to update shipment status');
       }
     })
@@ -89,6 +97,7 @@ export class ShipmentDetailComponent {
 
   onCancel() {
     if (!this.shipmentId) return;
+    this.cancelling = true;
 
     const location = this.cancelForm.value.location;
     const notes = this.cancelForm.value.notes;
@@ -104,10 +113,12 @@ export class ShipmentDetailComponent {
       .subscribe({
         next: () => {
           this.cancelForm.reset();
+          this.cancelling = false;
           this.loadShipment();
           this.notification.success('Shipment cancelled');
         },
         error: () => {
+          this.cancelling = false;
           this.notification.error('Failed to cancel shipment');
         },
       });
@@ -118,14 +129,17 @@ export class ShipmentDetailComponent {
   }
 
   loadShipment() {
+    this.loading = true;
     if (!this.shipmentId) return;
 
     this.shipmentsService.getShipmentById(this.shipmentId)
       .subscribe({
         next: (response) => {
           this.shipment = response;
+          this.loading = false;
         },
         error: () => {
+          this.loading = false;
           this.notification.error('Failed to load shipment');
         },
       });

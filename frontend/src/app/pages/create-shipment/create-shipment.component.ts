@@ -24,6 +24,7 @@ export class CreateShipmentComponent {
   private notification = inject(NotificationService);
   private shipmentsService = inject(ShipmentsService);
   private router = inject(Router);
+  loading = false;
 
   shipmentForm = new FormGroup({
     originAddress: new FormControl('', Validators.required),
@@ -52,6 +53,8 @@ export class CreateShipmentComponent {
       !weight
     ) return;
 
+    this.loading = true;
+
     this,this.shipmentsService.createShipment(
       originAddress,
       destinationAddress,
@@ -65,6 +68,7 @@ export class CreateShipmentComponent {
         });
       },
       error: () => {
+        this.loading = false;
         this.notification.error('Failed to create shipment');
       },
     });

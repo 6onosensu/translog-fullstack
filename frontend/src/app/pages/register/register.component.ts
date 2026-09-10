@@ -26,6 +26,7 @@ export class RegisterComponent {
   private notification = inject(NotificationService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  loading = false;
 
   registerForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -37,24 +38,26 @@ export class RegisterComponent {
   });
   
   onSubmit() {
+    this.loading = true;
+
     const { name, email, role } = this.registerForm.value;
+    if (!name || !email || !role) {
+      return;
+    }
 
-  if (!name || !email || !role) {
-    return;
-  }
+    const password = 'change_me'
 
-  const password = 'change_me'
-
-  this.authService.register(name, email, password, role).subscribe({
-    next: () => {
-      this.router.navigate(['/shipments']).then(() => {
-        this.notification.success('User registered');
-      });
-      
-    },
-    error: () => {
-      this.notification.error('Failed to register user');
-    },
-  });
+    this.authService.register(name, email, password, role).subscribe({
+      next: () => {
+        this.router.navigate(['/shipments']).then(() => {
+          this.notification.success('User registered');
+        });
+        
+      },
+      error: () => {
+        this.loading = false;
+        this.notification.error('Failed to register user');
+      },
+    });
   }
 }

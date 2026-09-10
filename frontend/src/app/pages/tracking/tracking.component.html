@@ -24,7 +24,9 @@
     </button>
   </form>
 
-  @if (shipment) {
+  @if (loading) {
+    <p>Loading shipment...</p>
+  } @else if (shipment) {
     <section class="tracking-result">
       <h2>{{ shipment.trackingCode }}</h2>
 

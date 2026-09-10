@@ -37,8 +37,16 @@
       >
     </mat-form-field>
 
-    <button mat-flat-button type="submit">
-      Create Shipment
+    <button 
+      mat-flat-button 
+      type="submit"
+      [disabled]="loading"
+    >
+      @if (loading) {
+        Creating...
+      } @else {
+        Create Shipment
+      }
     </button>
   </form>
 </main>

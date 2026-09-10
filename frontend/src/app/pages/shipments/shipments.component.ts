@@ -27,6 +27,7 @@ export class ShipmentsComponent {
   private notification = inject(NotificationService);
   private shipmentsService = inject(ShipmentsService);
   shipments: Shipment[] = [];
+  loading = false;
 
   total = 0;
   page = 1;
@@ -45,6 +46,7 @@ export class ShipmentsComponent {
   }
 
   loadShipments() {
+    this.loading = true;
     this.shipmentsService
       .getShipments(this.selectedStatus, this.page)
       .subscribe({
@@ -52,10 +54,12 @@ export class ShipmentsComponent {
           this.shipments = response.items;
           this.total = response.total;
           this.page = response.page;
+          this.loading = false;
         },
-        error: () => this.notification.error(
-          'Failed to load shipments'
-        ),
+        error: () => {
+          this.loading = false;
+          this.notification.error('Failed to load shipments')
+        }
       });
   }
 
