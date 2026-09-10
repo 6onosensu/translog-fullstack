@@ -8,6 +8,19 @@
       Create Shipment
     </a>
 
+    <button
+      mat-stroked-button
+      class="link-button"
+      (click)="exportCSV()"
+      [disabled]="downloading"
+    >
+      @if (downloading) {
+        Exporting...
+      } @else {
+        Export CSV
+      }
+    </button>
+
     <mat-form-field appearance="outline" >
       <mat-label>Status</mat-label>
 

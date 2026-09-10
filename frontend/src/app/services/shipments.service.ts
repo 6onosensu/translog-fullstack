@@ -148,4 +148,11 @@ export class ShipmentsService {
       },
     );
   }
+
+  exportCSV() {
+    return this.http.get(
+      `${environment.apiUrl}/shipments/export/csv`,
+      { responseType: 'blob', },
+    );
+  }
 }

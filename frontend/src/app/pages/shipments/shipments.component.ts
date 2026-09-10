@@ -28,6 +28,7 @@ export class ShipmentsComponent {
   private shipmentsService = inject(ShipmentsService);
   shipments: Shipment[] = [];
   loading = false;
+  downloading = false;
 
   total = 0;
   page = 1;
@@ -72,5 +73,25 @@ export class ShipmentsComponent {
   onPageChange(event: PageEvent) {
     this.page = event.pageIndex + 1;
     this.loadShipments();
+  }
+
+  exportCSV() {
+    this.downloading = true;
+    this.shipmentsService.exportCSV().subscribe({
+      next: (file) => {
+        const url = window.URL.createObjectURL(file);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'shipments.csv';
+        link.click();
+        window.URL.revokeObjectURL(url);
+        this.downloading = false;
+      },
+      error: () => {
+        this.downloading = false;
+        this.notification.error('Failed to export shipments');
+      }
+    })
   }
 }

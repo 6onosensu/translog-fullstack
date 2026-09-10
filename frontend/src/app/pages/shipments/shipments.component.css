@@ -4,3 +4,14 @@
   align-items: center;
   margin-bottom: 24px;
 }
+
+.link-button {
+  border: none;
+  background: none;
+  padding: 0;
+
+  color: #551a8b;
+  text-decoration: underline;
+  font: inherit;
+  cursor: pointer;
+}

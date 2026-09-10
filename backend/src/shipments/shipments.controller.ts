@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Body, Get, Query, Param, Patch, Req, Delete } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Get, Query, Param, Patch, Req, Delete, Header } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ShipmentsService } from './shipments.service';
 import { CreateShipmentDto } from './dto/create-shipment.dto';
@@ -29,6 +29,17 @@ export class ShipmentsController {
     limit: number;
   }> {
     return this.shipmentsService.findAll(query);
+  }
+
+  @ApiOperation({ summary: 'Get shipments to CSV' })
+  @Get('export/csv')
+  @Header('Content-Type', 'text/csv')
+  @Header(
+    'Content-Disposition',
+    'attachment; filename="shipments.csv"',
+  )
+  exportCSV() {
+    return this.shipmentsService.exportCSV();
   }
   
   @ApiOperation({ summary: 'Get shipment by id' })

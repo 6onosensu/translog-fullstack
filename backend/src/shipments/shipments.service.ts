@@ -156,6 +156,28 @@ export class ShipmentsService {
     );
   }
 
+  async exportCSV() {
+    const shipments = await this.shipmentRepo.find({
+      order: {
+        createdAt: 'DESC',
+      }
+    })
+    const header = 'trackingCode,recipientName,destinationAddress,status,createdAt,weight';
+  
+    const rows = shipments.map((shipment) => 
+      [
+        shipment.trackingCode,
+        shipment.recipientName,
+        shipment.destinationAddress,
+        shipment.status,
+        shipment.createdAt,
+        shipment.weight,
+      ].join(','),
+    );
+
+    return [header, ...rows].join('\n');
+  }
+
   private async getById(id: string): Promise<Shipment> {
     const shipment = await this.shipmentRepo.findOneBy({ id });
     return this.getShipmentOrThrow(shipment);
