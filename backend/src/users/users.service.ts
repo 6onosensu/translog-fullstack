@@ -12,8 +12,8 @@ export class UsersService {
   ) {}
 
   findByEmail(email: string): Promise<User | null> {
-    return this.userRepository.findOne({ 
-      where: { email }
+    return this.userRepository.findOne({
+      where: { email },
     });
   }
 
@@ -35,9 +35,9 @@ export class UsersService {
     role: UserRole,
     name: string,
   ): Promise<User> {
-    const user = this.userRepository.create({ 
-      email, 
-      passwordHash, 
+    const user = this.userRepository.create({
+      email,
+      passwordHash,
       role,
       name,
     });
@@ -51,5 +51,4 @@ export class UsersService {
       },
     });
   }
- 
 }

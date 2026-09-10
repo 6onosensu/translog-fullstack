@@ -1,5 +1,5 @@
-import { VehicleAssignmentService } from "./services/vehicle-assignment.service"
-import { Shipment } from "./entities/shipment.entity";
+import { VehicleAssignmentService } from './services/vehicle-assignment.service';
+import { Shipment } from './entities/shipment.entity';
 
 describe('VehicleAssignmentService', () => {
   let service: VehicleAssignmentService;
@@ -24,6 +24,5 @@ describe('VehicleAssignmentService', () => {
     expect(result.vehicles[0].shipments[0].weight).toBe(8);
     expect(result.vehicles[1].shipments[0].weight).toBe(7);
     expect(result.vehicles[1].shipments[1].weight).toBe(3);
-  })
-})
-
+  });
+});

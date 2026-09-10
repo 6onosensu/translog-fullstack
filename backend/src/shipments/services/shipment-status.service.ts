@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { ShipmentStatus } from "../enums/shipment-status.enum";
-import { Shipment } from "../entities/shipment.entity";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { ShipmentStatus } from '../enums/shipment-status.enum';
+import { Shipment } from '../entities/shipment.entity';
 
 @Injectable()
 export class ShipmentStatusService {
@@ -24,27 +24,19 @@ export class ShipmentStatusService {
     if (!transitions[currentStatus].includes(newStatus)) {
       throw new BadRequestException('Invalid status transition');
     }
-
   }
 
   validateCancellation(status: ShipmentStatus): void {
     if (status === ShipmentStatus.DELIVERED) {
-      throw new BadRequestException(
-        'Delivered shipment cannot be cancelled',
-      );
+      throw new BadRequestException('Delivered shipment cannot be cancelled');
     }
 
     if (status === ShipmentStatus.CANCELLED) {
-      throw new BadRequestException(
-        'Shipment is already cancelled',
-      );
+      throw new BadRequestException('Shipment is already cancelled');
     }
   }
 
-  apply(
-    shipment: Shipment,
-    status: ShipmentStatus,
-  ): void {
+  apply(shipment: Shipment, status: ShipmentStatus): void {
     shipment.status = status;
 
     if (status === ShipmentStatus.DELIVERED) {

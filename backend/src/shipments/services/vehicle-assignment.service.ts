@@ -1,12 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { Shipment } from "../entities/shipment.entity";
+import { Injectable } from '@nestjs/common';
+import { Shipment } from '../entities/shipment.entity';
 
 @Injectable()
 export class VehicleAssignmentService {
-  assign(
-    shipments: Shipment[],
-    capacity: number,
-  ) {
+  assign(shipments: Shipment[], capacity: number) {
     const sortedShipments = [...shipments].sort(
       (a, b) => Number(b.weight) - Number(a.weight),
     );
@@ -17,7 +14,7 @@ export class VehicleAssignmentService {
       const shipmentWeight = Number(shipment.weight);
       let assigned = false;
 
-      for(const vehicle of vehicles) {
+      for (const vehicle of vehicles) {
         const currentWeight = this.getTotalWeight(vehicle);
 
         if (currentWeight + shipmentWeight <= capacity) {
@@ -41,10 +38,7 @@ export class VehicleAssignmentService {
     );
   }
 
-  private formatResult(
-    vehicles: Shipment[][],
-    capacity: number,
-  ) {
+  private formatResult(vehicles: Shipment[][], capacity: number) {
     const formattedVehicles = vehicles.map((vehicle, index) => {
       const totalWeight = this.getTotalWeight(vehicle);
 
@@ -58,12 +52,12 @@ export class VehicleAssignmentService {
         totalWeight,
         remainingCapacity: capacity - totalWeight,
       };
-    })
+    });
 
     const totalWeight = formattedVehicles.reduce(
       (sum, vehicle) => sum + vehicle.totalWeight,
       0,
-    )
+    );
 
     return {
       vehicles: formattedVehicles,

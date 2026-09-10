@@ -18,17 +18,13 @@ export class AuthController {
   @Post('register')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.SUPERVISOR)
-  register(
-    @Body() registerDto: RegisterDto
-  ): Promise<void> {
+  register(@Body() registerDto: RegisterDto): Promise<void> {
     return this.authService.register(registerDto);
   }
 
   @ApiOperation({ summary: 'Login user' })
   @Post('login')
-  login(
-    @Body() loginDto: LoginDto
-  ): Promise<{ accessToken: string; }> {
+  login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
     return this.authService.login(loginDto);
   }
 }

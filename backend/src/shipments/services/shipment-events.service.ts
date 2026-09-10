@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { ShipmentEvent } from "../entities/shipment-event.entity";
-import { Repository } from "typeorm";
-import { ShipmentStatus } from "../enums/shipment-status.enum";
-import { Shipment } from "../entities/shipment.entity";
-import { User } from "../../users/entities/user.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ShipmentEvent } from '../entities/shipment-event.entity';
+import { Repository } from 'typeorm';
+import { ShipmentStatus } from '../enums/shipment-status.enum';
+import { Shipment } from '../entities/shipment.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Injectable()
 export class ShipmentEventsService {

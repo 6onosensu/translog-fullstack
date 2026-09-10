@@ -5,14 +5,13 @@ import { UsersModule } from './users/users.module';
 import { ShipmentsModule } from './shipments/shipments.module';
 import { AuthModule } from './auth/auth.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-       inject: [ConfigService],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.getOrThrow<string>('DB_HOST'),

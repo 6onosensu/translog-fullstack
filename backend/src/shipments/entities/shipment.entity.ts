@@ -1,12 +1,11 @@
-
-import { ShipmentStatus } from "../enums/shipment-status.enum";
-import { Column, Entity, OneToMany } from "typeorm";
-import { BaseEntity } from "../../common/base.entity";
-import { ShipmentEvent } from "./shipment-event.entity";
+import { ShipmentStatus } from '../enums/shipment-status.enum';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { BaseEntity } from '../../common/base.entity';
+import { ShipmentEvent } from './shipment-event.entity';
 
 @Entity('shipments')
 export class Shipment extends BaseEntity {
-  @Column({ 
+  @Column({
     type: 'enum',
     enum: ShipmentStatus,
     default: ShipmentStatus.CREATED,
@@ -15,7 +14,7 @@ export class Shipment extends BaseEntity {
 
   @Column({ unique: true })
   trackingCode!: string;
-  
+
   @Column({ type: 'decimal' })
   weight!: number;
 
@@ -37,6 +36,6 @@ export class Shipment extends BaseEntity {
   @Column({ nullable: true })
   recipientPhone?: string;
 
-  @OneToMany(() => ShipmentEvent, event => event.shipment)
+  @OneToMany(() => ShipmentEvent, (event) => event.shipment)
   events!: ShipmentEvent[];
 }

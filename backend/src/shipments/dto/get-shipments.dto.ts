@@ -1,6 +1,6 @@
-import { Type } from "class-transformer";
-import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
-import { ShipmentStatus } from "../enums/shipment-status.enum";
+import { Type } from 'class-transformer';
+import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
+import { ShipmentStatus } from '../enums/shipment-status.enum';
 
 export class GetShipmentsDto {
   @IsOptional()
@@ -19,4 +19,3 @@ export class GetShipmentsDto {
   @IsEnum(ShipmentStatus)
   status?: ShipmentStatus;
 }
-

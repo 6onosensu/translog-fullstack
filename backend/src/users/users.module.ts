@@ -6,10 +6,7 @@ import { InitialSupervisorService } from './initial-supervisor.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
-  providers: [
-    UsersService,
-    InitialSupervisorService,
-  ],
+  providers: [UsersService, InitialSupervisorService],
   exports: [UsersService],
 })
 export class UsersModule {}

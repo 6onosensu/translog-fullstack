@@ -1,16 +1,16 @@
-import { Column, Entity } from "typeorm";
-import { BaseEntity } from "../../common/base.entity";
-import { UserRole } from "../enums/user-role.enum";
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from '../../common/base.entity';
+import { UserRole } from '../enums/user-role.enum';
 
 @Entity('users')
-export class User extends BaseEntity { 
+export class User extends BaseEntity {
   @Column({ unique: true })
   email!: string;
 
   @Column()
   passwordHash!: string;
 
-  @Column({ 
+  @Column({
     type: 'enum',
     enum: UserRole,
   })

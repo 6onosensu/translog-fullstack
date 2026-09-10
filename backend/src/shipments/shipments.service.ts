@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Shipment } from './entities/shipment.entity';
@@ -28,7 +32,7 @@ export class ShipmentsService {
     private readonly vehicleAssignmentService: VehicleAssignmentService,
   ) {}
 
-  async findByTrackingCode(trackingCode: string): Promise<Shipment>{
+  async findByTrackingCode(trackingCode: string): Promise<Shipment> {
     const shipment = await this.shipmentRepo.findOne({
       where: { trackingCode },
       relations: { events: true },
@@ -40,8 +44,8 @@ export class ShipmentsService {
   async findOne(id: string): Promise<Shipment> {
     const shipment = await this.shipmentRepo.findOne({
       where: { id },
-      relations: { events: { user: true }},
-      order: { events: { createdAt: 'ASC' }},
+      relations: { events: { user: true } },
+      order: { events: { createdAt: 'ASC' } },
     });
 
     return this.getShipmentOrThrow(shipment);
@@ -53,7 +57,7 @@ export class ShipmentsService {
     page: number;
     limit: number;
   }> {
-    const {page, limit, status } = query;
+    const { page, limit, status } = query;
     const where = status ? { status } : {};
     const [items, total] = await this.shipmentRepo.findAndCount({
       where,
@@ -64,7 +68,10 @@ export class ShipmentsService {
       },
     });
     return {
-      items, total, page, limit,
+      items,
+      total,
+      page,
+      limit,
     };
   }
 
@@ -86,17 +93,11 @@ export class ShipmentsService {
   ): Promise<Shipment> {
     const shipment = await this.findOne(id);
 
-    this.shipmentStatusService.validateChange(
-      shipment.status,
-      dto.status,
-    );
+    this.shipmentStatusService.validateChange(shipment.status, dto.status);
 
     const user = await this.usersService.findById(userId);
-    
-    this.shipmentStatusService.apply(
-      shipment,
-      dto.status,
-    );
+
+    this.shipmentStatusService.apply(shipment, dto.status);
 
     await this.saveShipmentAndEvent(
       shipment,
@@ -116,16 +117,11 @@ export class ShipmentsService {
   ): Promise<void> {
     const shipment = await this.findOne(id);
 
-    this.shipmentStatusService.validateCancellation(
-      shipment.status,
-    );
+    this.shipmentStatusService.validateCancellation(shipment.status);
 
     const user = await this.usersService.findById(userId);
 
-    this.shipmentStatusService.apply(
-      shipment,
-      ShipmentStatus.CANCELLED,
-    );
+    this.shipmentStatusService.apply(shipment, ShipmentStatus.CANCELLED);
 
     await this.saveShipmentAndEvent(
       shipment,
@@ -139,32 +135,27 @@ export class ShipmentsService {
   async assignVehicles(dto: AssignVehiclesDto) {
     const shipments: Shipment[] = [];
 
-    for(const id of dto.shipmentIds) {
+    for (const id of dto.shipmentIds) {
       const shipment = await this.getById(id);
 
-      this.validateForAssignment(
-        shipment, 
-        dto.vehicleCapacity
-      );
+      this.validateForAssignment(shipment, dto.vehicleCapacity);
 
       shipments.push(shipment);
     }
 
-    return this.vehicleAssignmentService.assign(
-      shipments,
-      dto.vehicleCapacity,
-    );
+    return this.vehicleAssignmentService.assign(shipments, dto.vehicleCapacity);
   }
 
   async exportCSV() {
     const shipments = await this.shipmentRepo.find({
       order: {
         createdAt: 'DESC',
-      }
-    })
-    const header = 'trackingCode,recipientName,destinationAddress,status,createdAt,weight';
-  
-    const rows = shipments.map((shipment) => 
+      },
+    });
+    const header =
+      'trackingCode,recipientName,destinationAddress,status,createdAt,weight';
+
+    const rows = shipments.map((shipment) =>
       [
         shipment.trackingCode,
         shipment.recipientName,
@@ -183,10 +174,7 @@ export class ShipmentsService {
     return this.getShipmentOrThrow(shipment);
   }
 
-  private validateForAssignment(
-    shipment: Shipment,
-    capacity: number,
-  ): void {
+  private validateForAssignment(shipment: Shipment, capacity: number): void {
     if (shipment.status !== ShipmentStatus.IN_WAREHOUSE) {
       throw new BadRequestException(
         `Shipment ${shipment.trackingCode} is not in warehouse`,
@@ -217,9 +205,7 @@ export class ShipmentsService {
     );
   }
 
-  private getShipmentOrThrow(
-    shipment: Shipment | null
-  ): Shipment {
+  private getShipmentOrThrow(shipment: Shipment | null): Shipment {
     if (!shipment) {
       throw new NotFoundException('Shipment not found');
     }

@@ -14,15 +14,12 @@ import { JwtStrategy } from './strategies/jwt.strategy';
         secret: configService.getOrThrow<string>('JWT_SECRET'),
         signOptions: {
           expiresIn: '3h',
-        }
-      })
+        },
+      }),
     }),
     UsersModule,
   ],
-  providers: [
-    AuthService,
-    JwtStrategy,
-  ],
-  controllers: [AuthController]
+  providers: [AuthService, JwtStrategy],
+  controllers: [AuthController],
 })
 export class AuthModule {}

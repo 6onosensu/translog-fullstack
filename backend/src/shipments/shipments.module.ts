@@ -12,13 +12,7 @@ import { TrackingController } from './tracking.controller';
 import { VehicleAssignmentService } from './services/vehicle-assignment.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      Shipment,
-      ShipmentEvent,
-    ]),
-    UsersModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Shipment, ShipmentEvent]), UsersModule],
   providers: [
     ShipmentsService,
     TrackingCodeService,
@@ -26,9 +20,6 @@ import { VehicleAssignmentService } from './services/vehicle-assignment.service'
     ShipmentEventsService,
     VehicleAssignmentService,
   ],
-  controllers: [
-    ShipmentsController,
-    TrackingController,
-  ]
+  controllers: [ShipmentsController, TrackingController],
 })
 export class ShipmentsModule {}

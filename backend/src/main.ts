@@ -15,21 +15,18 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.enableCors({
-    origin: 'http://localhost:4200'
-  })
+    origin: 'http://localhost:4200',
+  });
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Translog API')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
-  const document = SwaggerModule.createDocument(
-    app, 
-    swaggerConfig
-  );
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
 
   SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+void bootstrap();

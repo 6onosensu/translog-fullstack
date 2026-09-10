@@ -1,6 +1,6 @@
-import { BadRequestException } from "@nestjs/common";
-import { ShipmentStatus } from "../enums/shipment-status.enum";
-import { ShipmentStatusService } from "./shipment-status.service";
+import { BadRequestException } from '@nestjs/common';
+import { ShipmentStatus } from '../enums/shipment-status.enum';
+import { ShipmentStatusService } from './shipment-status.service';
 
 describe('ShipmentStatusService', () => {
   let service: ShipmentStatusService;
@@ -20,10 +20,7 @@ describe('ShipmentStatusService', () => {
 
   it('should reject invalid status transition', () => {
     expect(() =>
-      service.validateChange(
-        ShipmentStatus.CREATED,
-        ShipmentStatus.DELIVERED,
-      ),
+      service.validateChange(ShipmentStatus.CREATED, ShipmentStatus.DELIVERED),
     ).toThrow(BadRequestException);
   });
 });
