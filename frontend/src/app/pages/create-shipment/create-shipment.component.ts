@@ -30,7 +30,10 @@ export class CreateShipmentComponent {
     originAddress: new FormControl('', Validators.required),
     destinationAddress: new FormControl('', Validators.required),
     recipientName: new FormControl('', Validators.required),
-    recipientPhone: new FormControl(''),
+    recipientPhone: new FormControl(
+      '',
+      Validators.pattern(/^\+?[0-9]{7,15}$/),
+    ),
     weight: new FormControl<number | null>(null, [
       Validators.required,
       Validators.min(0.1),

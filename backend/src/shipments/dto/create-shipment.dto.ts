@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  Matches,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
@@ -25,6 +26,9 @@ export class CreateShipmentDto {
 
   @IsString()
   @IsOptional()
+  @Matches(/^\+?[0-9]{7,15}$/, {
+    message: 'Phone number is invalid',
+  })
   recipientPhone?: string;
 
   @IsNumber()
