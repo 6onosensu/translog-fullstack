@@ -1,0 +1,79 @@
+<app-header />
+
+<main class="vehicle-assignment-page">
+  <h1>Vehicle Assignment</h1>
+  <div class="selection-section">
+    @if (shipments.length > 0) {
+      @for (shipment of shipments; track shipment.id) {
+        <div>
+          <mat-checkbox
+            (change)="selectShipment(shipment.id)"
+          >
+            {{ shipment.trackingCode }}
+            - {{ shipment.weight }} kg
+          </mat-checkbox>
+        </div>
+      }
+    } @else {
+      <p>No shipments in warehouse.</p>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Vehicle capacity (kg)</mat-label>
+      <input
+        matInput
+        type="number"
+        [formControl]="vehicleCapacity"
+      >
+    </mat-form-field>
+
+    <button
+      mat-flat-button
+      (click)="assignVehicles()"
+      [disabled]="assigning"
+    >
+      @if (assigning) {
+        Assigning...
+      } @else {
+        Assign vehicles
+      }
+    </button>
+
+    @if (result) {
+      <section class="assignment-result">
+        <h2>Assignment Result</h2>
+
+        <p>
+          <strong>Vehicles used:</strong>
+          {{ result.totalVehiclesUsed }}
+        </p>
+
+        <p>
+          <strong>Total weight:</strong>
+          {{ result.totalWeight }} kg
+        </p>
+
+        @for (vehicle of result.vehicles; track vehicle.vehicleNumber) {
+          <div class="vehicle-card">
+            <h3>Vehicle {{ vehicle.vehicleNumber }}</h3>
+            @for (shipment of vehicle.shipments; track shipment.shipmentId) {
+              <p>
+                {{ shipment.trackingCode }}
+                - {{ shipment.weight }} kg
+              </p>
+            }
+            <p>
+              <strong>Total:</strong>
+              {{ vehicle.totalWeight }} kg
+            </p>
+
+            <p>
+              <strong>Remaining:</strong>
+              {{ vehicle.remainingCapacity }} kg
+            </p>
+          </div>
+        }
+      </section>
+    }
+  </div>
+</main>

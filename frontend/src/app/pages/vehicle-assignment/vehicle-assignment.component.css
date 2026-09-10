@@ -1,0 +1,48 @@
+.vehicle-assignment-page {
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.vehicle-assignment-page h1 {
+  text-align: center;
+}
+
+.selection-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.selection-section mat-checkbox {
+  width: 400px;
+}
+
+.selection-section mat-form-field {
+  width: 400px;
+  margin-top: 12px;
+}
+
+.selection-section button {
+  margin-top: 4px;
+}
+
+.assignment-result {
+  width: 100%;
+  max-width: 700px;
+  margin: 40px auto 0;
+}
+
+.assignment-result h2,
+.assignment-result > p {
+  text-align: center;
+}
+
+.vehicle-card {
+  margin-bottom: 20px;
+  padding: 16px;
+
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+}

@@ -26,6 +26,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'vehicles',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/vehicle-assignment/vehicle-assignment.component').then(
+        (component) => component.VehicleAssignmentComponent,
+      ),
+  },
+  {
     path: 'shipments',
     canActivate: [authGuard],
     loadComponent: () =>

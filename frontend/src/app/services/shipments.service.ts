@@ -2,6 +2,25 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../environments/environments';
 
+export interface VehicleShipment {
+  shipmentId: string;
+  trackingCode: string;
+  weight: number;
+}
+
+export interface Vehicle {
+  vehicleNumber: number;
+  shipments: VehicleShipment[];
+  totalWeight: number;
+  remainingCapacity: number;
+}
+
+export interface VehicleAssignmentResponse {
+  vehicles: Vehicle[];
+  totalVehiclesUsed: number;
+  totalWeight: number;
+}
+
 export interface ShipmentEvent {
   id: string;
   createdAt: string;
@@ -118,5 +137,15 @@ export class ShipmentsService {
         weight,
       }
     )
+  }
+
+  assignVehicles(shipmentIds: string[], vehicleCapacity: number) {
+    return this.http.post<VehicleAssignmentResponse>(
+      `${environment.apiUrl}/shipments/assign-vehicles`,
+      {
+        shipmentIds,
+        vehicleCapacity,
+      },
+    );
   }
 }
