@@ -1,0 +1,29 @@
+.dashboard-page {
+  max-width: 900px;
+  margin: 40px auto;
+}
+
+.dashboard-page h1 {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.dashboard-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.status-card {
+  width: 220px;
+  text-align: center;
+  padding: 20px;
+}
+
+.total {
+  display: block;
+  margin-top: 16px;
+  font-size: 32px;
+  font-weight: 600;
+}

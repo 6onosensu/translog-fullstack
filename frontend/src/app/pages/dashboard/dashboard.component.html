@@ -1,0 +1,20 @@
+<app-header />
+
+<main class="dashboard-page">
+  <h1>Dashboard</h1>
+
+  <div class="dashboard-cards">
+    @for (status of statuses; track status.name) {
+      <mat-card class="status-card">
+        <mat-card-title>
+          {{ status.name }}
+        </mat-card-title>
+        <mat-card-content>
+          <span class="total">
+            {{ status.total }}
+          </span>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+</main>

@@ -26,6 +26,14 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'dashboard',
+    canActivate: [authGuard, supervisorGuard],
+    loadComponent: () =>
+      import('./pages/dashboard/dashboard.component').then(
+        (component) => component.DashboardComponent,
+      ),
+  },
+  {
     path: 'vehicles',
     canActivate: [authGuard],
     loadComponent: () =>
